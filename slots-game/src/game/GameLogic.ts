@@ -1,18 +1,19 @@
   export interface SpinResult {
-    symbols: number[];
-    win: boolean;
-    prize: number;
+    reelLayout: number[];
+    winningLines: number[][]; 
+    creditsWon: number;
   }
 
-  const SYMBOL_COUNT = 5;
 
-  export function getSpinResult(bet: number): SpinResult {
-    const symbols = Array.from({ length: 3 }, () =>
-      Math.floor(Math.random() * SYMBOL_COUNT)
-    );
 
-    const win = symbols[0] === symbols[1] && symbols[1] === symbols[2];
-    const prize = win ? bet * 10 : 0;
+   export async function getSpinResult(bet: number): Promise<SpinResult> {
+     const response = await fetch("http://localhost:8080/api/spin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bet })
+    });
 
-    return { symbols, win, prize };
+      const data = await response.json();
+      return data;
+
   }

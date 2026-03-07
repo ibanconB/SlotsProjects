@@ -68,11 +68,14 @@ import { Container, Graphics } from 'pixi.js';
       return this.container;
     }
 
-    setResult(symbolIndex: number): void {
-    const middle = this.symbols[1];
-    middle.clear();
-    middle.roundRect(0, 0, 160, 80, 8);
-    middle.fill(SYMBOL_COLORS[symbolIndex]);
+    setResult(symbolIndexes: number[]): void {
+   
+    for (let i = 0; i < 3; i++) {
+      const symbol = this.symbols[i];
+      symbol.clear();
+      symbol.roundRect(0, 0, 160, 80, 8);
+      symbol.fill(SYMBOL_COLORS[symbolIndexes[i]]);
+  }
   }
 
   }

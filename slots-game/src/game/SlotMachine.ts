@@ -86,13 +86,17 @@ import { getSpinResult } from './GameLogic';
         const button = new SpinButton(() => {
         this.reels.forEach(reel => reel.spin());
 
-         setTimeout(() => {
-    const result = getSpinResult(10);
-    this.reels.forEach((reel, index) => reel.setResult(result.symbols[index]));
+         setTimeout(async () => {
+    const result = await getSpinResult(10);
+    this.reels.forEach((reel, index) => reel.setResult([
+      result.reelLayout[index],
+      result.reelLayout[index + 3],
+      result.reelLayout[index + 6]
+  ]));
     this.reels.forEach(reel => reel.stop());
 
-    if (result.win) {
-      this.balance += result.prize;
+    if (result.winningLines.length > 0) {
+      this.balance += result.creditsWon;
     } else {
       this.balance -= 10;
     }
