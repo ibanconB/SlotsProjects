@@ -20,8 +20,24 @@ src/
 - Símbolos visibles por reel: 3
 - Símbolos totales (placeholder): 5 colores
 
-## GameLogic.ts — importante
-Este archivo es un **mock temporal**. Cuando el backend esté listo, reemplazar `getSpinResult()` por un `fetch()` al endpoint `/api/spin`. El resto del código no debe cambiar.
+## GameLogic.ts — estado actual
+El mock ha sido reemplazado por una llamada real al backend.
+
+```typescript
+export interface SpinResult {
+    reelLayout: number[][];
+    winningLines: number[][];
+    creditsWon: number;
+}
+
+export async function getSpinResult(bet: number): Promise<SpinResult>
+// POST http://localhost:8080/api/spin con { bet }
+```
+
+## Contrato con el backend
+- `reelLayout`: array de 9 enteros (grid 3×3), valores 0–4
+- Carrete `i` muestra índices `i`, `i+3`, `i+6` del reelLayout
+- Símbolos en `Reel.ts`: `['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6']` (índice = símbolo)
 
 ## Pendiente frontend
 - [ ] Feedback visual de victoria (mensaje "WIN!", iluminar líneas ganadoras)
@@ -29,7 +45,6 @@ Este archivo es un **mock temporal**. Cuando el backend esté listo, reemplazar 
 - [ ] Animación de parada más suave
 - [ ] Imágenes reales de símbolos (el usuario las aportará)
 - [ ] Centrado del canvas (pendiente revisar)
-- [ ] Conectar con backend real (sustituir GameLogic.ts)
 
 ## Conceptos aprendidos
 - Módulos TypeScript (import/export)
@@ -39,3 +54,5 @@ Este archivo es un **mock temporal**. Cuando el backend esté listo, reemplazar 
 - Eventos de input (eventMode, pointerdown)
 - Masks para recorte de contenido
 - Separación de capas: visual vs lógica
+- `async/await` y `Promise<T>` para llamadas al backend
+- `fetch()` con método POST y body JSON
