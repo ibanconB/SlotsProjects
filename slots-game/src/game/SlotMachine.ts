@@ -10,6 +10,7 @@ import { getSpinResult } from './GameLogic';
     private reels: Reel[] = [];
     private balanceText!: Text;
     private balance: number = 1000;
+    private spinButton!: SpinButton;
 
     constructor(app: Application) {
       this.container = new Container();
@@ -83,7 +84,8 @@ import { getSpinResult } from './GameLogic';
     }
 
     private buildSpinButton(): void {
-        const button = new SpinButton(() => {
+        this.spinButton = new SpinButton(() => {
+        this.spinButton.setEnabled(false);
         this.reels.forEach(reel => reel.spin());
 
          setTimeout(async () => {
@@ -102,11 +104,12 @@ import { getSpinResult } from './GameLogic';
     }
 
     this.balanceText.text = `BALANCE: ${this.balance}`;
+    this.spinButton.setEnabled(true);
   }, 2000);
 
     });
 
-        const btn = button.getContainer();
+        const btn = this.spinButton.getContainer();
         btn.x = 300;
         btn.y = 440;
         this.container.addChild(btn);

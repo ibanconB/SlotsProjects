@@ -2,6 +2,7 @@
 
   export class SpinButton {
     private container: Container;
+    private enabled: boolean = true;
 
     constructor(onSpin: () => void) {
       this.container = new Container();
@@ -36,5 +37,11 @@
 
     getContainer(): Container {
       return this.container;
+    }
+
+    setEnabled(enabled: boolean): void {
+      this.enabled = enabled;
+      this.container.eventMode = enabled ? 'static' : 'none';
+      this.container.alpha = enabled ? 1 : 0.5;
     }
   }
