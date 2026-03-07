@@ -50,7 +50,7 @@ import { getSpinResult } from './GameLogic';
     private buildReelsBackground():void{
         const reelbg = new Graphics();
          reelbg.roundRect(100,120,600,300,0);
-         reelbg.fill('#1a1a2e');
+         reelbg.fill('#000000');
          this.container.addChild(reelbg);
     }
 

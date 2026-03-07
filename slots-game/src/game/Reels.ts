@@ -1,15 +1,23 @@
-import { Container, Graphics } from 'pixi.js';
+import { Container, Graphics,Sprite, Texture } from 'pixi.js';
 
-  const SYMBOL_COLORS = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6'];
+
   const SYMBOL_HEIGHT = 90;
   const VISIBLE_SYMBOLS = 3;
+
+   const SYMBOL_TEXTURES = [
+    '/NeonFruits/symbols/cherry.png',
+    '/NeonFruits/symbols/lemon.png',
+    '/NeonFruits/symbols/orange.png',
+    '/NeonFruits/symbols/grape.png',
+    '/NeonFruits/symbols/watermelon.png',
+  ];
 
   export class Reel {
     private container: Container;
     private symbolsContainer: Container;
     private spinning: boolean = false;
     private speed: number = 0;
-      private symbols: Graphics[] = [];
+    private symbols: Sprite[] = [];
 
     constructor() {
       this.container = new Container();
@@ -26,22 +34,20 @@ import { Container, Graphics } from 'pixi.js';
 
     }
 
-    private buildSymbols(): void {
-      for (let i = 0; i < 6; i++) {
-        const color = SYMBOL_COLORS[Math.floor(Math.random() * SYMBOL_COLORS.length)];
+ private buildSymbols(): void {
+    for (let i = 0; i < 6; i++) {
+      const texture = Texture.from(SYMBOL_TEXTURES[Math.floor(Math.random() * SYMBOL_TEXTURES.length)]);
+      const symbol = new Sprite(texture);
 
-        const symbol = new Graphics();
-        symbol.roundRect(0, 0, 160, 80, 8);
-        symbol.fill(color);
+      symbol.width = 160;
+      symbol.height = 80;
+      symbol.x = 10;
+      symbol.y = i * SYMBOL_HEIGHT;
 
-        symbol.x = 10;
-        symbol.y = i * SYMBOL_HEIGHT;
-        this.symbols.push(symbol);
-
-        this.symbolsContainer.addChild(symbol);
-      }
+      this.symbols.push(symbol);
+      this.symbolsContainer.addChild(symbol);
     }
-
+  }
     spin(): void {
       this.spinning = true;
       this.speed = 20;
@@ -69,13 +75,9 @@ import { Container, Graphics } from 'pixi.js';
     }
 
     setResult(symbolIndexes: number[]): void {
-   
     for (let i = 0; i < 3; i++) {
-      const symbol = this.symbols[i];
-      symbol.clear();
-      symbol.roundRect(0, 0, 160, 80, 8);
-      symbol.fill(SYMBOL_COLORS[symbolIndexes[i]]);
-  }
+      this.symbols[i].texture = Texture.from(SYMBOL_TEXTURES[symbolIndexes[i]]);
+    }
   }
 
   }
