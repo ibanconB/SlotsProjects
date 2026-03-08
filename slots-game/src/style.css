@@ -12,3 +12,7 @@
     align-items: center;
     background: #0f0f0f;
   }
+
+    canvas {
+    display: block;
+  }

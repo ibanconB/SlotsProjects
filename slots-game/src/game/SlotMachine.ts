@@ -11,6 +11,7 @@ import { getSpinResult } from './GameLogic';
     private balanceText!: Text;
     private balance: number = 1000;
     private spinButton!: SpinButton;
+    private resultText!: Text;
 
     constructor(app: Application) {
       this.container = new Container();
@@ -22,6 +23,8 @@ import { getSpinResult } from './GameLogic';
       this.buildSpinButton();
       this.buildReels();
       this.setupGameLoop(app);
+
+       this.container.addChild(this.resultText);
       
         
     }
@@ -80,6 +83,19 @@ import { getSpinResult } from './GameLogic';
         
 
         this.container.addChild(title)
+
+         const resultStyle = new TextStyle({
+    fontFamily: 'Arial',
+    fontSize: 40,
+    fill: '#FFD700',
+    fontWeight: 'bold',
+  });
+  this.resultText = new Text({ text: '', style: resultStyle });
+  this.resultText.anchor.set(0.5);
+  this.resultText.x = 400;
+  this.resultText.y = 270;
+  this.resultText.alpha = 0;
+
         
     }
 
@@ -97,11 +113,12 @@ import { getSpinResult } from './GameLogic';
   ]));
     this.reels.forEach(reel => reel.stop());
 
-    if (result.winningLines.length > 0) {
-      this.balance += result.creditsWon;
-    } else {
-      this.balance -= 10;
-    }
+     if (result.winningLines.length > 0) {
+    this.balance += result.creditsWon;
+    this.showResult(`+${result.creditsWon}`, '#FFD700');
+  } else {
+    this.balance -= 10;
+  }
 
     this.balanceText.text = `BALANCE: ${this.balance}`;
     this.spinButton.setEnabled(true);
@@ -119,6 +136,13 @@ import { getSpinResult } from './GameLogic';
     app.ticker.add(() => {
       this.reels.forEach(reel => reel.update());
     });
+  }
+
+   private showResult(message: string, color: string): void {
+    this.resultText.text = message;
+    (this.resultText.style as TextStyle).fill = color;
+    this.resultText.alpha = 1;
+    setTimeout(() => { this.resultText.alpha = 0; }, 2000);
   }
 
 
