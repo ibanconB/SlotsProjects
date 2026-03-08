@@ -1,4 +1,4 @@
-import { Application, Container, Graphics, Text, TextStyle, Ticker } from 'pixi.js';
+import { Application, Container, Graphics, Text, TextStyle } from 'pixi.js';
 import { SpinButton } from './SpinButton';
 import { Reel } from './Reels';
 import { getSpinResult } from './GameLogic';
@@ -12,6 +12,7 @@ import { getSpinResult } from './GameLogic';
     private balance: number = 1000;
     private spinButton!: SpinButton;
     private resultText!: Text;
+     private winLinesGraphics!: Graphics;
 
     constructor(app: Application) {
       this.container = new Container();
@@ -23,7 +24,9 @@ import { getSpinResult } from './GameLogic';
       this.buildSpinButton();
       this.buildReels();
       this.setupGameLoop(app);
-
+      this.winLinesGraphics = new Graphics();
+      this.container.addChild(this.winLinesGraphics);
+   
        this.container.addChild(this.resultText);
       
         
@@ -111,17 +114,26 @@ import { getSpinResult } from './GameLogic';
       result.reelLayout[index + 3],
       result.reelLayout[index + 6]
   ]));
-    this.reels.forEach(reel => reel.stop());
+    const REEL_STOP_DELAY = 400;
 
-     if (result.winningLines.length > 0) {
-    this.balance += result.creditsWon;
-    this.showResult(`+${result.creditsWon}`, '#FFD700');
-  } else {
-    this.balance -= 10;
-  }
 
+
+  this.reels.forEach((reel, index) => {
+    setTimeout(() => reel.stop(), index * REEL_STOP_DELAY);
+  });
+
+  const lastReelStop = (this.reels.length - 1) * REEL_STOP_DELAY;
+  setTimeout(() => {
+    if (result.winningLines.length > 0) {
+      this.balance += result.creditsWon;
+      this.showResult(`+${result.creditsWon}`, '#FFD700');
+      this.showWinLines(result.winningLines);
+    } else {
+      this.balance -= 10;
+    }
     this.balanceText.text = `BALANCE: ${this.balance}`;
     this.spinButton.setEnabled(true);
+  }, lastReelStop + 1500);
   }, 2000);
 
     });
@@ -143,6 +155,20 @@ import { getSpinResult } from './GameLogic';
     (this.resultText.style as TextStyle).fill = color;
     this.resultText.alpha = 1;
     setTimeout(() => { this.resultText.alpha = 0; }, 2000);
+  }
+
+  private showWinLines(winningLines: number[][]): void {
+    this.winLinesGraphics.clear();
+
+    const ROW_TOPS = [130, 220, 310]; // y de cada fila en pantalla
+
+    winningLines.forEach(line => {
+      const row = Math.floor(line[0] / 3);
+      this.winLinesGraphics.rect(100, ROW_TOPS[row], 600, 90);
+      this.winLinesGraphics.fill({ color: '#FFD700', alpha: 0.25 });
+    });
+
+    setTimeout(() => this.winLinesGraphics.clear(), 3000);
   }
 
 

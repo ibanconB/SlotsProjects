@@ -18,6 +18,8 @@ import { Container, Graphics,Sprite, Texture } from 'pixi.js';
     private spinning: boolean = false;
     private speed: number = 0;
     private symbols: Sprite[] = [];
+    private stopping: boolean = false;
+    
 
     constructor() {
       this.container = new Container();
@@ -54,21 +56,29 @@ import { Container, Graphics,Sprite, Texture } from 'pixi.js';
     }
 
     stop(): void {
-      this.spinning = false;
-      this.speed = 0;
-      this.symbolsContainer.y = 0;
+      this.stopping = true;
     }
 
     update(): void {
-      if (!this.spinning) return;
+    if (!this.spinning) return;
 
-      this.symbolsContainer.y += this.speed;
+    this.symbolsContainer.y += this.speed;
 
-      const totalHeight = SYMBOL_HEIGHT * VISIBLE_SYMBOLS;
-      if (this.symbolsContainer.y >= totalHeight) {
-        this.symbolsContainer.y -= totalHeight;
+    const totalHeight = SYMBOL_HEIGHT * VISIBLE_SYMBOLS;
+    if (this.symbolsContainer.y >= totalHeight) {
+      this.symbolsContainer.y -= totalHeight;
+    }
+
+    if (this.stopping) {
+      this.speed *= 0.95;
+      if (this.speed < 0.3) {
+        this.speed = 0;
+        this.spinning = false;
+        this.stopping = false;
+        this.symbolsContainer.y = 0;
       }
     }
+  }
 
     getContainer(): Container {
       return this.container;

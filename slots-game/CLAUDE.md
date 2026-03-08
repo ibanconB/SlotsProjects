@@ -43,7 +43,8 @@ public/
 
 ## Pendiente frontend
 - [x] **Animación de ganancia** — muestra `+X` en dorado en el centro de los reels al ganar, desaparece a los 2s. `resultText` añadido al container al final del constructor para que quede por encima de los reels.
-- [ ] Animación de parada suave (desaceleración)
+- [x] Animación de parada suave — deceleración con factor `0.95`, umbral `0.2`, snap a `y=0`
+- [x] Parada en cascada — `REEL_STOP_DELAY = 400ms`, cada reel para con `index * delay`. Resultado y botón se habilitan tras `lastReelStop + 1500ms`
 - [ ] Feedback visual de victoria (iluminar líneas ganadoras)
 - [ ] Mejorar diseño general (background, marco de reels, logo NeonFruits)
 
